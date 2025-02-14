@@ -87,9 +87,9 @@ def save_answers():
             f.write(f"{i+1}. {question[0]} → {answer}\n")
     st.success("✅ คำตอบถูกบันทึก! (เธอเปิดไฟล์ `king_answers.txt` ดูได้)")
 
-# 🔹 หน้าสุดท้าย (ข้อความ + รูปแนวนอน)
+# 🔹 หน้าสุดท้าย (ข้อความ + รูปแนวนอน + คำตอบพี่คิงแบบซ่อน)
 def show_final_message():
-    st.markdown("<h2 style='text-align: center; color: red;'>ขอบคุณนะงับพี่คิงเล่นเกมนี้! 💖</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center; color: red;'>ขอบคุณที่เล่นเกมนี้! 💖</h2>", unsafe_allow_html=True)
     
     image_urls = [
         get_image_url("king1.PNG"), get_image_url("king2.PNG"),
@@ -100,9 +100,23 @@ def show_final_message():
     
     st.image(image_urls, width=100)
 
+    # 🔥 เพิ่มปุ่มให้เธอดูคำตอบของพี่คิง (พี่คิงไม่เห็นปุ่มนี้)
+    if "show_answers" not in st.session_state:
+        st.session_state.show_answers = False  # ซ่อนคำตอบไว้ก่อน
+    
+    if st.button("🔎 ดูคำตอบของพี่คิง (เฉพาะเธอ)"):
+        st.session_state.show_answers = True  # กดแล้วให้แสดงคำตอบ
+        st.rerun()
+
+    if st.session_state.show_answers:
+        st.markdown("<h3 style='color: red;'>💖 คำตอบของพี่คิง 💖</h3>", unsafe_allow_html=True)
+        for i, (question, answer) in enumerate(zip(questions, st.session_state.answers)):
+            st.write(f"**{i+1}. {question[0]}** → {answer}")
+
     if st.button("🎉 หน้าสุดท้าย 🎉"):
         st.session_state.page = "special"
         st.rerun()
+
 
 # 🔹 หน้าพิเศษ (Valentine's Surprise!)
 def show_special_page():
