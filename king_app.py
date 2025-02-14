@@ -17,7 +17,7 @@ if "page" not in st.session_state:
 # 🔹 หน้าแรก
 def show_home():
     st.image(get_image_url("king1.PNG"), width=300)
-    st.markdown("<h2 style='text-align: center; color: red;'>To: พี่คิง 💖</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center; color: salmon pink;'>To: พี่คิง 💖</h2>", unsafe_allow_html=True)
     if st.button("💖 กดเปิดจดหมาย 💖"):
         st.session_state.page = "letter"
         st.rerun()
