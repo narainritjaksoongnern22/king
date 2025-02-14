@@ -1,7 +1,7 @@
 import streamlit as st
 
 # 🔹 ตั้งค่าหน้าเว็บ
-st.set_page_config(page_title="Happy Valentine's Day 💖", page_icon="💌", layout="centered")
+st.set_page_config(page_title="Happy Valentine's Day P'KING 💖", page_icon="💌", layout="centered")
 
 # 🔹 ฟังก์ชันโหลดรูปจาก GitHub
 GITHUB_REPO = "https://raw.githubusercontent.com/narainritjaksoongnern22/king/main/"
