@@ -107,7 +107,7 @@ def show_final_message():
 
     # 🔥 แสดงรูปที่ขยายและข้อความพิเศษ
     if st.session_state.selected_image:
-        st.image(st.session_state.selected_image, use_column_width=True)
+        st.image(st.session_state.selected_image, use_container_width=True)  # ✅ ใช้ use_container_width แทน
         st.markdown("<h2 style='text-align: center; color: blue;'>พี่สุดหล่อ 😍</h2>", unsafe_allow_html=True)
 
     if st.button("🎉 หน้าสุดท้าย 🎉"):
