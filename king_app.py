@@ -1,5 +1,4 @@
 import streamlit as st
-import os
 
 # 🔹 ตั้งค่าหน้าเว็บ
 st.set_page_config(page_title="Happy Valentine's Day 💖", page_icon="💌", layout="centered")
@@ -15,38 +14,7 @@ if "answers" not in st.session_state:
 if "page" not in st.session_state:
     st.session_state.page = "home"
 
-# 🔹 ตั้งค่าไฟล์ซ่อนคำตอบ
-HIDDEN_ANSWERS_FILE = "hidden_answers.txt"
-
-# 🔹 ฟังก์ชันบันทึกคำตอบแบบลับ
-def save_hidden_answers():
-    answers_text = "💖 คำตอบของพี่คิง 💖\n\n"
-    for i, (question, answer) in enumerate(zip(questions, st.session_state.answers)):
-        answers_text += f"{i+1}. {question[0]} → {answer}\n"
-
-    with open(HIDDEN_ANSWERS_FILE, "a", encoding="utf-8") as f:
-        f.write(answers_text + "\n---\n")
-
-# 🔹 ฟังก์ชันแสดงคำตอบที่ถูกบันทึก (เธอเท่านั้นที่เห็น!)
-def show_hidden_answers():
-    st.markdown("<h3 style='color: red;'>🔒 คำตอบของพี่คิง (เธอเท่านั้นที่เห็น!)</h3>", unsafe_allow_html=True)
-    
-    if os.path.exists(HIDDEN_ANSWERS_FILE):
-        with open(HIDDEN_ANSWERS_FILE, "r", encoding="utf-8") as f:
-            hidden_answers = f.read()
-            st.text_area("📜 คำตอบของพี่คิง", hidden_answers, height=300)
-
-        # ✅ ปุ่มให้เธอโหลดไฟล์คำตอบไปดูเอง
-        st.download_button(
-            label="📥 ดาวน์โหลดคำตอบของพี่คิง",
-            data=hidden_answers,
-            file_name="king_answers.txt",
-            mime="text/plain"
-        )
-    else:
-        st.warning("⚠️ ยังไม่มีคำตอบที่ถูกบันทึก")
-
-# 🔹 ฟังก์ชันแสดงหน้าแรก
+# 🔹 หน้าแรก
 def show_home():
     st.image(get_image_url("king1.PNG"), width=300)
     st.markdown("<h2 style='text-align: center; color: red;'>To: พี่คิง 💖</h2>", unsafe_allow_html=True)
@@ -54,7 +22,7 @@ def show_home():
         st.session_state.page = "letter"
         st.rerun()
 
-# 🔹 ฟังก์ชันแสดงจดหมาย
+# 🔹 จดหมาย
 def show_letter():
     st.markdown("<h2 style='text-align: center; color: pink;'>Happy Valentine's Day 💖</h2>", unsafe_allow_html=True)
     st.write("""
@@ -71,7 +39,7 @@ def show_letter():
         st.session_state.page = "password"
         st.rerun()
 
-# 🔹 ฟังก์ชันให้พี่คิงใส่รหัสเข้าเกม
+# 🔹 ใส่รหัสเข้าเกม
 def ask_password():
     st.write("🔑 **ใส่รหัสลับเพื่อเข้าเกม!**")
     password = st.text_input("รหัสผ่าน", type="password")
@@ -96,37 +64,65 @@ questions = [
     ("😍 พี่คิงอยากไปเที่ยวด้วยกันมั้ย? 💕", ["ไป!"])
 ]
 
-# 🔹 ฟังก์ชันให้พี่คิงตอบคำถาม
+# 🔹 ฟังก์ชันเริ่มเกม
 def start_game():
-    st.session_state.answers = []
+    st.session_state.answers = []  # 🔥 รีเซ็ตคำตอบทุกครั้ง
     st.write("🎮 **เกมเริ่มแล้ว!** ตอบคำถามต่อไปนี้:")
     
     for i, (question, options) in enumerate(questions):
-        answer = st.radio(f"**{i+1}. {question}**", options, index=None, key=f"q{i}")
+        answer = st.radio(
+            f"**{i+1}. {question}**",
+            options,
+            index=None,  # 🔥 ทำให้ตัวเลือกว่างเปล่าตั้งแต่เริ่มต้น
+            key=f"q{i}"
+        )
         st.session_state.answers.append(answer)
     
-    if st.button("📤 บันทึกคำตอบแบบลับ"):
-        save_hidden_answers()
-        st.success("✅ คำตอบของพี่คิงถูกบันทึกเรียบร้อย! (เธอเปิดดูได้)")
+    if st.button("ส่งคำตอบ 💖"):
         st.session_state.page = "final"
         st.rerun()
 
-# 🔹 ฟังก์ชันแสดงหน้าสุดท้าย
+# 🔹 ฟังก์ชันหน้าสุดท้าย (ข้อความ + รูปแนวนอน + ขยายรูป)
 def show_final_message():
     st.markdown("<h2 style='text-align: center; color: red;'>ขอบคุณนะงับพี่คิงเล่นเกมนี้! 💖</h2>", unsafe_allow_html=True)
+    
+    image_urls = [
+        get_image_url("king1.PNG"), get_image_url("king2.PNG"),
+        get_image_url("king3.PNG"), get_image_url("king4.PNG"),
+        get_image_url("king5.PNG"), get_image_url("king6.PNG"),
+        get_image_url("king7.PNG")
+    ]
 
-    if st.button("🔎 ดูคำตอบของพี่คิง"):
-        show_hidden_answers()
+    # 🔥 ถ้าไม่มีการเลือกภาพ ให้ค่า default เป็น None
+    if "selected_image" not in st.session_state:
+        st.session_state.selected_image = None
+
+    # 🔹 แสดงรูปทั้งหมดให้พี่คิงดู
+    cols = st.columns(len(image_urls))  # แสดงหลายรูปในแนวนอน
+    for i, url in enumerate(image_urls):
+        with cols[i]:
+            if st.button(f"📸 รูป {i+1}", key=f"img_btn_{i}"):
+                st.session_state.selected_image = url  # เซ็ตให้เป็นรูปที่ถูกเลือก
+                st.rerun()
+
+    # 🔥 แสดงรูปที่ขยายและข้อความพิเศษ
+    if st.session_state.selected_image:
+        st.image(st.session_state.selected_image, use_container_width=True)  # ✅ ใช้ use_container_width แทน
+        st.markdown("<h2 style='text-align: center; color: blue;'>พี่สุดหล่อ 😍</h2>", unsafe_allow_html=True)
 
     if st.button("🎉 หน้าสุดท้าย 🎉"):
         st.session_state.page = "special"
         st.rerun()
 
+
 # 🔹 หน้าพิเศษ (Valentine's Surprise!)
 def show_special_page():
     st.markdown("<h1 style='text-align: center; color: pink;'>HAPPY VALENTINE'S DAY นะครับพี่คิง 💖</h1>", unsafe_allow_html=True)
     st.image(get_image_url("king8.PNG"), width=300)
+    
     st.markdown("<h3 style='text-align: center; color: coral;'>ขอบคุณนะครับที่คุยกับกฟแล้วทำให้กฟยิ้มได้ทุกวัน 😊</h3>", unsafe_allow_html=True)
+    
+    st.markdown("<h2 style='text-align: center; color: pink;'>💖💖💖💖💖💖💖</h2>", unsafe_allow_html=True)
 
 # 🔹 เลือกหน้าที่ต้องแสดง
 if st.session_state.page == "home":
