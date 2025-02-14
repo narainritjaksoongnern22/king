@@ -1,13 +1,12 @@
 import streamlit as st
-import os
 
 # 🔹 ตั้งค่าหน้าเว็บ
 st.set_page_config(page_title="Happy Valentine's Day 💖", page_icon="💌", layout="centered")
 
-# 🔹 ตั้งค่าที่อยู่รูปภาพ
-IMAGE_DIR = r"C:\Users\HP\Desktop"  # 🔥 เปลี่ยนเป็นที่เก็บรูป
-def get_image_path(filename):
-    return os.path.join(IMAGE_DIR, filename)
+# 🔹 ฟังก์ชันโหลดรูปจาก GitHub
+GITHUB_REPO = "https://raw.githubusercontent.com/narainritjaksoongnern22/king/main/"
+def get_image_url(filename):
+    return f"{GITHUB_REPO}{filename}"
 
 # 🔹 ตั้งค่าคำตอบ
 if "answers" not in st.session_state:
@@ -15,7 +14,7 @@ if "answers" not in st.session_state:
 
 # 🔹 หน้าแรก
 def show_home():
-    st.image(get_image_path("king1.PNG"), width=300)
+    st.image(get_image_url("king1.PNG"), width=300)
     st.markdown("<h2 style='text-align: center; color: red;'>To: พี่คิง 💖</h2>", unsafe_allow_html=True)
     if st.button("💖 กดเปิดจดหมาย 💖"):
         show_letter()
@@ -60,7 +59,7 @@ questions = [
 
 # 🔹 ฟังก์ชันเริ่มเกม
 def start_game():
-    st.session_state.answers = []  # เคลียร์คำตอบเก่า
+    st.session_state.answers = []
     for i, (question, options) in enumerate(questions):
         st.write(f"**{i+1}. {question}**")
         answer = st.radio("", options, key=f"q{i}")
@@ -70,27 +69,27 @@ def start_game():
         save_answers()
         show_final_message()
 
-# 🔹 บันทึกคำตอบ
+# 🔹 บันทึกคำตอบ (ให้เธอดู แต่พี่คิงไม่เห็น!)
 def save_answers():
-    file_path = os.path.join(IMAGE_DIR, "king_answers.txt")  # 🔥 บันทึกลงที่ Desktop
+    file_path = "king_answers.txt"
     with open(file_path, "w", encoding="utf-8") as f:
         f.write("💖 คำตอบของพี่คิง 💖\n\n")
         for i, (question, answer) in enumerate(zip(questions, st.session_state.answers)):
             f.write(f"{i+1}. {question[0]} → {answer}\n")
-    st.success(f"✅ คำตอบถูกบันทึก! (เปิดไฟล์ `{file_path}` ดูได้)")
+    st.success("✅ คำตอบถูกบันทึก! (เธอเปิดไฟล์ `king_answers.txt` ดูได้)")
 
 # 🔹 หน้าสุดท้าย
 def show_final_message():
     st.markdown("<h2 style='text-align: center; color: red;'>ขอบคุณที่เล่นเกมนี้! 💖</h2>", unsafe_allow_html=True)
     
-    image_paths = [
-        get_image_path("king1.PNG"), get_image_path("king2.PNG"),
-        get_image_path("king3.PNG"), get_image_path("king4.PNG"),
-        get_image_path("king5.PNG"), get_image_path("king6.PNG"),
-        get_image_path("king7.PNG")
+    image_urls = [
+        get_image_url("king1.PNG"), get_image_url("king2.PNG"),
+        get_image_url("king3.PNG"), get_image_url("king4.PNG"),
+        get_image_url("king5.PNG"), get_image_url("king6.PNG"),
+        get_image_url("king7.PNG")
     ]
     
-    st.image(image_paths, width=100)
+    st.image(image_urls, width=100)
 
 # 🔹 เรียกหน้าแรก
 show_home()
