@@ -89,7 +89,7 @@ def save_answers():
 
 # 🔹 หน้าสุดท้าย (ข้อความ + รูปแนวนอน)
 def show_final_message():
-    st.markdown("<h2 style='text-align: center; color: red;'>ขอบคุณที่เล่นเกมนี้! 💖</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center; color: red;'>ขอบคุณนะงับพี่คิงเล่นเกมนี้! 💖</h2>", unsafe_allow_html=True)
     
     image_urls = [
         get_image_url("king1.PNG"), get_image_url("king2.PNG"),
