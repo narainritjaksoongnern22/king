@@ -45,7 +45,7 @@ def ask_password():
     password = st.text_input("รหัสผ่าน", type="password")
     
     if st.button("ยืนยัน"):
-        if password == "loveKing":
+        if password == "King10021999":
             st.session_state.page = "game"
             st.rerun()
         else:
