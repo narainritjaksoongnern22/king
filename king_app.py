@@ -17,7 +17,7 @@ if "page" not in st.session_state:
 # 🔹 หน้าแรก
 def show_home():
     st.image(get_image_url("king1.PNG"), width=300)
-    st.markdown("<h2 style='text-align: center; color: pink;'>To: พี่คิง 💖</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center; color: punch;'>To: พี่คิง 💖</h2>", unsafe_allow_html=True)
     if st.button("💖 กดเปิดจดหมาย 💖"):
         st.session_state.page = "letter"
         st.rerun()
@@ -109,7 +109,7 @@ def show_special_page():
     st.markdown("<h1 style='text-align: center; color: pink;'>HAPPY VALENTINE'S DAY นะครับพี่คิง 💖</h1>", unsafe_allow_html=True)
     st.image(get_image_url("king8.PNG"), width=300)
     
-    st.markdown("<h3 style='text-align: center; color: red;'>ขอบคุณนะครับที่คุยกับกฟแล้วทำให้กฟยิ้มได้ทุกวัน 😊</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center; color: coral;'>ขอบคุณนะครับที่คุยกับกฟแล้วทำให้กฟยิ้มได้ทุกวัน 😊</h3>", unsafe_allow_html=True)
     
     st.markdown("<h2 style='text-align: center; color: pink;'>💖💖💖💖💖💖💖</h2>", unsafe_allow_html=True)
 
