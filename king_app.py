@@ -1,5 +1,4 @@
 import streamlit as st
-import time
 
 # 🔹 ตั้งค่าหน้าเว็บ
 st.set_page_config(page_title="Happy Valentine's Day 💖", page_icon="💌", layout="centered")
@@ -9,13 +8,13 @@ GITHUB_REPO = "https://raw.githubusercontent.com/narainritjaksoongnern22/king/ma
 def get_image_url(filename):
     return f"{GITHUB_REPO}{filename}"
 
-# 🔹 ตั้งค่าหน้าเริ่มต้น
-if "page" not in st.session_state:
-    st.session_state.page = "home"
+# 🔹 ตั้งค่าคำตอบ
 if "answers" not in st.session_state:
     st.session_state.answers = []
+if "page" not in st.session_state:
+    st.session_state.page = "home"
 
-# 🔹 หน้าแรก (To: พี่คิง)
+# 🔹 หน้าแรก
 def show_home():
     st.image(get_image_url("king1.PNG"), width=300)
     st.markdown("<h2 style='text-align: center; color: red;'>To: พี่คิง 💖</h2>", unsafe_allow_html=True)
@@ -23,7 +22,7 @@ def show_home():
         st.session_state.page = "letter"
         st.rerun()
 
-# 🔹 เปิดจดหมาย
+# 🔹 จดหมาย
 def show_letter():
     st.markdown("<h2 style='text-align: center; color: pink;'>Happy Valentine's Day 💖</h2>", unsafe_allow_html=True)
     st.write("""
@@ -40,7 +39,7 @@ def show_letter():
         st.session_state.page = "password"
         st.rerun()
 
-# 🔹 หน้าใส่รหัส
+# 🔹 ใส่รหัสเข้าเกม
 def ask_password():
     st.write("🔑 **ใส่รหัสลับเพื่อเข้าเกม!**")
     password = st.text_input("รหัสผ่าน", type="password")
@@ -65,7 +64,7 @@ questions = [
     ("😍 พี่คิงอยากไปเที่ยวด้วยกันมั้ย? 💕", ["ไป!"])
 ]
 
-# 🔹 เล่นเกม
+# 🔹 ฟังก์ชันเริ่มเกม
 def start_game():
     st.session_state.answers = []
     st.write("🎮 **เกมเริ่มแล้ว!** ตอบคำถามต่อไปนี้:")
@@ -79,7 +78,7 @@ def start_game():
         st.session_state.page = "final"
         st.rerun()
 
-# 🔹 บันทึกคำตอบ
+# 🔹 บันทึกคำตอบ (ให้เธอดู แต่พี่คิงไม่เห็น!)
 def save_answers():
     file_path = "king_answers.txt"
     with open(file_path, "w", encoding="utf-8") as f:
@@ -88,10 +87,10 @@ def save_answers():
             f.write(f"{i+1}. {question[0]} → {answer}\n")
     st.success("✅ คำตอบถูกบันทึก! (เธอเปิดไฟล์ `king_answers.txt` ดูได้)")
 
-# 🔹 หน้ารวมรูปทั้งหมด
+# 🔹 หน้าสุดท้าย (ข้อความ + รูปแนวนอน)
 def show_final_message():
     st.markdown("<h2 style='text-align: center; color: red;'>ขอบคุณที่เล่นเกมนี้! 💖</h2>", unsafe_allow_html=True)
-
+    
     image_urls = [
         get_image_url("king1.PNG"), get_image_url("king2.PNG"),
         get_image_url("king3.PNG"), get_image_url("king4.PNG"),
@@ -105,26 +104,11 @@ def show_final_message():
         st.session_state.page = "special"
         st.rerun()
 
-# 🔹 หน้าสุดท้าย (รูปสลับไปมา 2 รอบ + จบที่ king8.PNG)
+# 🔹 หน้าพิเศษ (Valentine's Surprise!)
 def show_special_page():
     st.markdown("<h1 style='text-align: center; color: pink;'>HAPPY VALENTINE'S DAY นะครับพี่คิง 💖</h1>", unsafe_allow_html=True)
-
-    image_urls = [
-        get_image_url("king1.PNG"), get_image_url("king2.PNG"),
-        get_image_url("king3.PNG"), get_image_url("king4.PNG"),
-        get_image_url("king5.PNG"), get_image_url("king6.PNG"),
-        get_image_url("king7.PNG")
-    ]
-    
-    # 🔥 แสดงรูปสลับกัน 2 รอบ
-    for _ in range(2):  
-        for img in image_urls:
-            st.image(img, width=300)
-            time.sleep(0.5)
-            st.rerun()
-
-    # 🔥 จบที่ king8.PNG
     st.image(get_image_url("king8.PNG"), width=300)
+    
     st.markdown("<h3 style='text-align: center; color: red;'>ขอบคุณนะครับที่คุยกับกฟแล้วทำให้กฟยิ้มได้ทุกวัน 😊</h3>", unsafe_allow_html=True)
     
     st.markdown("<h2 style='text-align: center; color: pink;'>💖💖💖💖💖💖💖</h2>", unsafe_allow_html=True)
