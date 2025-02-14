@@ -87,7 +87,7 @@ def save_answers():
             f.write(f"{i+1}. {question[0]} → {answer}\n")
     st.success("✅ คำตอบถูกบันทึก! (เธอเปิดไฟล์ `king_answers.txt` ดูได้)")
 
-# 🔹 หน้าสุดท้าย
+# 🔹 หน้าสุดท้าย (ข้อความ + รูปแนวนอน)
 def show_final_message():
     st.markdown("<h2 style='text-align: center; color: red;'>ขอบคุณที่เล่นเกมนี้! 💖</h2>", unsafe_allow_html=True)
     
@@ -100,6 +100,19 @@ def show_final_message():
     
     st.image(image_urls, width=100)
 
+    if st.button("🎉 หน้าสุดท้าย 🎉"):
+        st.session_state.page = "special"
+        st.rerun()
+
+# 🔹 หน้าพิเศษ (Valentine's Surprise!)
+def show_special_page():
+    st.markdown("<h1 style='text-align: center; color: pink;'>HAPPY VALENTINE'S DAY นะครับพี่คิง 💖</h1>", unsafe_allow_html=True)
+    st.image(get_image_url("king8.PNG"), width=300)
+    
+    st.markdown("<h3 style='text-align: center; color: red;'>ขอบคุณนะครับที่คุยกับกฟแล้วทำให้กฟยิ้มได้ทุกวัน 😊</h3>", unsafe_allow_html=True)
+    
+    st.markdown("<h2 style='text-align: center; color: pink;'>💖💖💖💖💖💖💖</h2>", unsafe_allow_html=True)
+
 # 🔹 เลือกหน้าที่ต้องแสดง
 if st.session_state.page == "home":
     show_home()
@@ -111,3 +124,5 @@ elif st.session_state.page == "game":
     start_game()
 elif st.session_state.page == "final":
     show_final_message()
+elif st.session_state.page == "special":
+    show_special_page()
