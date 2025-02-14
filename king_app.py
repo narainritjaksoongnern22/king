@@ -1,4 +1,5 @@
 import streamlit as st
+import time
 
 # 🔹 ตั้งค่าหน้าเว็บ
 st.set_page_config(page_title="Happy Valentine's Day 💖", page_icon="💌", layout="centered")
@@ -78,7 +79,7 @@ def start_game():
         st.session_state.page = "final"
         st.rerun()
 
-# 🔹 บันทึกคำตอบ (ให้เธอดู แต่พี่คิงไม่เห็น!)
+# 🔹 บันทึกคำตอบ
 def save_answers():
     file_path = "king_answers.txt"
     with open(file_path, "w", encoding="utf-8") as f:
@@ -87,10 +88,10 @@ def save_answers():
             f.write(f"{i+1}. {question[0]} → {answer}\n")
     st.success("✅ คำตอบถูกบันทึก! (เธอเปิดไฟล์ `king_answers.txt` ดูได้)")
 
-# 🔹 หน้าสุดท้าย (ข้อความ + รูปแนวนอน)
+# 🔹 หน้าสุดท้าย (เล่น Animation เปลี่ยนรูป)
 def show_final_message():
     st.markdown("<h2 style='text-align: center; color: red;'>ขอบคุณที่เล่นเกมนี้! 💖</h2>", unsafe_allow_html=True)
-    
+
     image_urls = [
         get_image_url("king1.PNG"), get_image_url("king2.PNG"),
         get_image_url("king3.PNG"), get_image_url("king4.PNG"),
@@ -98,11 +99,16 @@ def show_final_message():
         get_image_url("king7.PNG")
     ]
     
-    st.image(image_urls, width=100)
+    # 🔥 แสดงรูปสลับกัน 2 รอบ
+    for _ in range(2):  
+        for img in image_urls:
+            st.image(img, width=300)
+            time.sleep(0.5)
+            st.rerun()
 
-    if st.button("🎉 หน้าสุดท้าย 🎉"):
-        st.session_state.page = "special"
-        st.rerun()
+    # 🔥 จบที่ king8.PNG
+    st.session_state.page = "special"
+    st.rerun()
 
 # 🔹 หน้าพิเศษ (Valentine's Surprise!)
 def show_special_page():
