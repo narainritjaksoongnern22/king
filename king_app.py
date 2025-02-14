@@ -11,13 +11,16 @@ def get_image_url(filename):
 # 🔹 ตั้งค่าคำตอบ
 if "answers" not in st.session_state:
     st.session_state.answers = []
+if "page" not in st.session_state:
+    st.session_state.page = "home"
 
 # 🔹 หน้าแรก
 def show_home():
     st.image(get_image_url("king1.PNG"), width=300)
     st.markdown("<h2 style='text-align: center; color: red;'>To: พี่คิง 💖</h2>", unsafe_allow_html=True)
     if st.button("💖 กดเปิดจดหมาย 💖"):
-        show_letter()
+        st.session_state.page = "letter"
+        st.rerun()
 
 # 🔹 จดหมาย
 def show_letter():
@@ -33,14 +36,18 @@ def show_letter():
     """)
     
     if st.button("💖 พร้อมเล่นเกมหรือยัง? 💖"):
-        ask_password()
+        st.session_state.page = "password"
+        st.rerun()
 
 # 🔹 ใส่รหัสเข้าเกม
 def ask_password():
-    password = st.text_input("🔑 ใส่รหัสลับเพื่อเข้าเกม!", type="password")
+    st.write("🔑 **ใส่รหัสลับเพื่อเข้าเกม!**")
+    password = st.text_input("รหัสผ่าน", type="password")
+    
     if st.button("ยืนยัน"):
         if password == "loveKing":
-            start_game()
+            st.session_state.page = "game"
+            st.rerun()
         else:
             st.error("❌ รหัสผิด! ลองใหม่สิพี่คิง 😉")
 
@@ -60,14 +67,16 @@ questions = [
 # 🔹 ฟังก์ชันเริ่มเกม
 def start_game():
     st.session_state.answers = []
+    st.write("🎮 **เกมเริ่มแล้ว!** ตอบคำถามต่อไปนี้:")
+    
     for i, (question, options) in enumerate(questions):
-        st.write(f"**{i+1}. {question}**")
-        answer = st.radio("", options, key=f"q{i}")
+        answer = st.radio(f"**{i+1}. {question}**", options, key=f"q{i}")
         st.session_state.answers.append(answer)
     
     if st.button("ส่งคำตอบ 💖"):
         save_answers()
-        show_final_message()
+        st.session_state.page = "final"
+        st.rerun()
 
 # 🔹 บันทึกคำตอบ (ให้เธอดู แต่พี่คิงไม่เห็น!)
 def save_answers():
@@ -91,5 +100,14 @@ def show_final_message():
     
     st.image(image_urls, width=100)
 
-# 🔹 เรียกหน้าแรก
-show_home()
+# 🔹 เลือกหน้าที่ต้องแสดง
+if st.session_state.page == "home":
+    show_home()
+elif st.session_state.page == "letter":
+    show_letter()
+elif st.session_state.page == "password":
+    ask_password()
+elif st.session_state.page == "game":
+    start_game()
+elif st.session_state.page == "final":
+    show_final_message()
