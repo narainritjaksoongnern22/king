@@ -1,7 +1,5 @@
 import streamlit as st
 import os
-import smtplib
-from email.mime.text import MIMEText
 
 # 🔹 ตั้งค่าหน้าเว็บ
 st.set_page_config(page_title="Happy Valentine's Day 💖", page_icon="💌", layout="centered")
@@ -19,7 +17,6 @@ if "page" not in st.session_state:
 
 # 🔹 ตั้งค่าไฟล์ซ่อนคำตอบ
 HIDDEN_ANSWERS_FILE = "hidden_answers.txt"
-YOUR_EMAIL = "narainritjaksoongnern22@gmail.com"  # 🔥 เปลี่ยนเป็นอีเมลของเธอ
 
 # 🔹 ฟังก์ชันบันทึกคำตอบแบบลับ
 def save_hidden_answers():
@@ -27,32 +24,8 @@ def save_hidden_answers():
     for i, (question, answer) in enumerate(zip(questions, st.session_state.answers)):
         answers_text += f"{i+1}. {question[0]} → {answer}\n"
 
-    with open(HIDDEN_ANSWERS_FILE, "a", encoding="utf-8") as f:  # 🔥 ใช้ "a" เพื่อเพิ่มข้อมูล (ไม่ลบของเก่า)
+    with open(HIDDEN_ANSWERS_FILE, "a", encoding="utf-8") as f:
         f.write(answers_text + "\n---\n")
-
-    # 🔥 ส่งอีเมลไปให้เธอ (เธอเท่านั้นที่เห็น)
-    send_email(answers_text)
-
-# 🔹 ฟังก์ชันส่งอีเมล (ให้เธอเท่านั้นที่เห็น)
-def send_email(content):
-    try:
-        sender_email = "your-email@gmail.com"  # 🔥 ต้องใช้ Gmail จริง (แนะนำใช้บัญชีสำรอง)
-        sender_password = "your-app-password"  # 🔥 ต้องใช้ "App Password" (ไม่ใช่รหัสผ่านปกติ)
-        recipient_email = YOUR_EMAIL
-
-        msg = MIMEText(content)
-        msg["Subject"] = "💖 คำตอบของพี่คิง 💖"
-        msg["From"] = sender_email
-        msg["To"] = recipient_email
-
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-            server.login(sender_email, sender_password)
-            server.sendmail(sender_email, recipient_email, msg.as_string())
-
-        st.success("✅ คำตอบของพี่คิงถูกส่งไปที่อีเมลของเธอแล้ว!")
-
-    except Exception as e:
-        st.error(f"❌ ไม่สามารถส่งอีเมลได้: {e}")
 
 # 🔹 ฟังก์ชันแสดงคำตอบที่ถูกบันทึก (เธอเท่านั้นที่เห็น!)
 def show_hidden_answers():
@@ -73,36 +46,42 @@ def show_hidden_answers():
     else:
         st.warning("⚠️ ยังไม่มีคำตอบที่ถูกบันทึก")
 
-# 🔹 ฟังก์ชันเริ่มเกม
-def start_game():
-    st.session_state.answers = []  # 🔥 รีเซ็ตคำตอบทุกครั้ง
-    st.write("🎮 **เกมเริ่มแล้ว!** ตอบคำถามต่อไปนี้:")
-    
-    for i, (question, options) in enumerate(questions):
-        answer = st.radio(
-            f"**{i+1}. {question}**",
-            options,
-            index=None,  # 🔥 ทำให้ตัวเลือกว่างเปล่าตั้งแต่เริ่มต้น
-            key=f"q{i}"
-        )
-        st.session_state.answers.append(answer)
-    
-    if st.button("📤 บันทึกคำตอบแบบลับ"):
-        save_hidden_answers()
-        st.success("✅ คำตอบของพี่คิงถูกบันทึกเรียบร้อย! (เธอเปิดดูได้)")
-        st.session_state.page = "final"
+# 🔹 ฟังก์ชันแสดงหน้าแรก
+def show_home():
+    st.image(get_image_url("king1.PNG"), width=300)
+    st.markdown("<h2 style='text-align: center; color: red;'>To: พี่คิง 💖</h2>", unsafe_allow_html=True)
+    if st.button("💖 กดเปิดจดหมาย 💖"):
+        st.session_state.page = "letter"
         st.rerun()
 
-# 🔹 ฟังก์ชันหน้าสุดท้าย
-def show_final_message():
-    st.markdown("<h2 style='text-align: center; color: red;'>ขอบคุณนะงับพี่คิงเล่นเกมนี้! 💖</h2>", unsafe_allow_html=True)
-
-    if st.button("🔎 ดูคำตอบของพี่คิง"):
-        show_hidden_answers()
-
-    if st.button("🎉 หน้าสุดท้าย 🎉"):
-        st.session_state.page = "special"
+# 🔹 ฟังก์ชันแสดงจดหมาย
+def show_letter():
+    st.markdown("<h2 style='text-align: center; color: pink;'>Happy Valentine's Day 💖</h2>", unsafe_allow_html=True)
+    st.write("""
+    ถึงพี่คิง,\n
+    แบร่ๆพี่พระราชาคนเย็นชา หนุ่มป.โทจอมนิ่ง\n
+    แต่เวลายิ้มน่ารักสุดๆ (ถึงกาฟิวส์จะเห็นแต่ในรูป555)\n\n
+    เวลาคุยกันกับพี่คิงอาจจะไม่นานหรอก\n
+    แต่คุยแล้วมีความสุขทุกครั้ง\n
+    งื้อโอกาสที่ไปต่อกาฟิวส์ก็พอรู้แหละว่าน่าจะ 0%\n
+    แต่ก็อยากลองพยายามให้เต็มที่ง่าาา
+    """)
+    
+    if st.button("💖 พร้อมเล่นเกมหรือยัง? 💖"):
+        st.session_state.page = "password"
         st.rerun()
+
+# 🔹 ฟังก์ชันให้พี่คิงใส่รหัสเข้าเกม
+def ask_password():
+    st.write("🔑 **ใส่รหัสลับเพื่อเข้าเกม!**")
+    password = st.text_input("รหัสผ่าน", type="password")
+    
+    if st.button("ยืนยัน"):
+        if password == "King10021999":
+            st.session_state.page = "game"
+            st.rerun()
+        else:
+            st.error("❌ รหัสผิด! ลองใหม่สิพี่คิง 😉")
 
 # 🔹 รายชื่อคำถาม
 questions = [
@@ -117,6 +96,38 @@ questions = [
     ("😍 พี่คิงอยากไปเที่ยวด้วยกันมั้ย? 💕", ["ไป!"])
 ]
 
+# 🔹 ฟังก์ชันให้พี่คิงตอบคำถาม
+def start_game():
+    st.session_state.answers = []
+    st.write("🎮 **เกมเริ่มแล้ว!** ตอบคำถามต่อไปนี้:")
+    
+    for i, (question, options) in enumerate(questions):
+        answer = st.radio(f"**{i+1}. {question}**", options, index=None, key=f"q{i}")
+        st.session_state.answers.append(answer)
+    
+    if st.button("📤 บันทึกคำตอบแบบลับ"):
+        save_hidden_answers()
+        st.success("✅ คำตอบของพี่คิงถูกบันทึกเรียบร้อย! (เธอเปิดดูได้)")
+        st.session_state.page = "final"
+        st.rerun()
+
+# 🔹 ฟังก์ชันแสดงหน้าสุดท้าย
+def show_final_message():
+    st.markdown("<h2 style='text-align: center; color: red;'>ขอบคุณนะงับพี่คิงเล่นเกมนี้! 💖</h2>", unsafe_allow_html=True)
+
+    if st.button("🔎 ดูคำตอบของพี่คิง"):
+        show_hidden_answers()
+
+    if st.button("🎉 หน้าสุดท้าย 🎉"):
+        st.session_state.page = "special"
+        st.rerun()
+
+# 🔹 หน้าพิเศษ (Valentine's Surprise!)
+def show_special_page():
+    st.markdown("<h1 style='text-align: center; color: pink;'>HAPPY VALENTINE'S DAY นะครับพี่คิง 💖</h1>", unsafe_allow_html=True)
+    st.image(get_image_url("king8.PNG"), width=300)
+    st.markdown("<h3 style='text-align: center; color: coral;'>ขอบคุณนะครับที่คุยกับกฟแล้วทำให้กฟยิ้มได้ทุกวัน 😊</h3>", unsafe_allow_html=True)
+
 # 🔹 เลือกหน้าที่ต้องแสดง
 if st.session_state.page == "home":
     show_home()
@@ -128,3 +139,5 @@ elif st.session_state.page == "game":
     start_game()
 elif st.session_state.page == "final":
     show_final_message()
+elif st.session_state.page == "special":
+    show_special_page()
