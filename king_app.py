@@ -17,7 +17,7 @@ if "page" not in st.session_state:
 # 🔹 หน้าแรก
 def show_home():
     st.image(get_image_url("king1.PNG"), width=300)
-    st.markdown("<h2 style='text-align: center; color: red;'>To: พี่คิง 💖</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center; color: pink;'>To: พี่คิง 💖</h2>", unsafe_allow_html=True)
     if st.button("💖 กดเปิดจดหมาย 💖"):
         st.session_state.page = "letter"
         st.rerun()
@@ -45,7 +45,7 @@ def ask_password():
     password = st.text_input("รหัสผ่าน", type="password")
     
     if st.button("ยืนยัน"):
-        if password == "loveKing":
+        if password == "King10021999":
             st.session_state.page = "game"
             st.rerun()
         else:
