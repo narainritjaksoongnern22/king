@@ -82,7 +82,7 @@ def start_game():
         st.session_state.page = "final"
         st.rerun()
 
-# 🔹 หน้าสุดท้าย (ข้อความ + รูปแนวนอน)
+# 🔹 ฟังก์ชันหน้าสุดท้าย (ข้อความ + รูปแนวนอน + ขยายรูป)
 def show_final_message():
     st.markdown("<h2 style='text-align: center; color: red;'>ขอบคุณนะงับพี่คิงเล่นเกมนี้! 💖</h2>", unsafe_allow_html=True)
     
@@ -92,12 +92,28 @@ def show_final_message():
         get_image_url("king5.PNG"), get_image_url("king6.PNG"),
         get_image_url("king7.PNG")
     ]
-    
-    st.image(image_urls, width=100)
+
+    # 🔥 ถ้าไม่มีการเลือกภาพ ให้ค่า default เป็น None
+    if "selected_image" not in st.session_state:
+        st.session_state.selected_image = None
+
+    # 🔹 แสดงรูปทั้งหมดให้พี่คิงดู
+    cols = st.columns(len(image_urls))  # แสดงหลายรูปในแนวนอน
+    for i, url in enumerate(image_urls):
+        with cols[i]:
+            if st.button(f"📸 รูป {i+1}", key=f"img_btn_{i}"):
+                st.session_state.selected_image = url  # เซ็ตให้เป็นรูปที่ถูกเลือก
+                st.rerun()
+
+    # 🔥 แสดงรูปที่ขยายและข้อความพิเศษ
+    if st.session_state.selected_image:
+        st.image(st.session_state.selected_image, use_column_width=True)
+        st.markdown("<h2 style='text-align: center; color: blue;'>พี่สุดหล่อ 😍</h2>", unsafe_allow_html=True)
 
     if st.button("🎉 หน้าสุดท้าย 🎉"):
         st.session_state.page = "special"
         st.rerun()
+
 
 # 🔹 หน้าพิเศษ (Valentine's Surprise!)
 def show_special_page():
